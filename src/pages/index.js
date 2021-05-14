@@ -8,24 +8,26 @@ export default function Home({ pageData }) {
     <Layout>
       <div className="entries">
         <div className="row justify-content-start  ">
-          {pageData.map((entry, index) => (
-            <div className="col-md-6" key={index}>
+          {pageData.map((entry) => (
+            <div className="col-md-6" key={entry._id}>
               <div className="entry mb-3">
                 <div className="main-image">
-                  <Link
-                    as={`/portfolio/${entry.slug}`}
-                    href="/portfolio/[slug]"
-                  >
-                    <h1>{entry.headline}</h1>
-                  </Link>
-                  {entry.image && (
+                  <h3>{entry.title}</h3>
+                  <h4>
+                    {entry.designation} - {entry.roleType}
+                  </h4>
+                  <p>{entry.period}</p>
+                  <p>{entry.location}</p>
+                  {entry.logo && (
                     <img
-                      src={`http://localhost:1337${entry.image.url}`}
-                      alt={entry.image.name}
+                      src={`https://portfolio-cms-mongo.herokuapp.com${entry.logo.url}`}
+                      alt={entry.logo.name}
+                      width={entry.logo.width}
+                      height={entry.logo.height}
                     />
                   )}
                   <div
-                    dangerouslySetInnerHTML={{ __html: entry.content }}
+                    dangerouslySetInnerHTML={{ __html: entry.description }}
                   ></div>
                 </div>
               </div>
@@ -38,7 +40,9 @@ export default function Home({ pageData }) {
 }
 
 export const getStaticProps = async () => {
-  const data = await fetch("http://localhost:1337/portfolios");
+  const data = await fetch(
+    "https://portfolio-cms-mongo.herokuapp.com/work-histories"
+  );
   const pageData = await data.json();
 
   return { props: { pageData }, revalidate: 1 };
